@@ -73,13 +73,10 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-                # TODO(F2): 스페이스 키를 누르면 self.player.shoot() 으로 총알을 만들어
-                #           self.bullets 와 self.all_sprites 두 그룹에 넣을 것. (게임 오버 중에는 쏘지 않게)
                 elif event.key == pygame.K_SPACE and not self.game_over:
                     bullet = self.player.shoot()
                     self.bullets.add(bullet)
                     self.all_sprites.add(bullet)
-                # TODO(F5): 게임 오버 상태에서 R 키를 누르면 self.reset() 으로 새 판을 시작할 것.
                 elif event.key == pygame.K_r and self.game_over:
                     self.reset()
 
@@ -105,8 +102,6 @@ class Game:
         self.bullets.update()
         self.enemies.update()
 
-        # TODO(F3): 총알과 적이 부딪히면 둘 다 없애고, 맞힌 적 하나당 SCORE_PER_ENEMY 점을 더할 것.
-        #           힌트: pygame.sprite.groupcollide
         hits = pygame.sprite.groupcollide(
             self.enemies,
             self.bullets,
@@ -129,10 +124,10 @@ class Game:
         for enemy in list(self.enemies):
             if enemy.rect.top > HEIGHT:
                 enemy.kill()
-                self.lives -= 1 # TODO(F4): 적이 아래로 지나갔으니 생명을 1 줄일 것.
+                self.lives -= 1 
 
         if self.lives <= 0:
-            self.end_game()# TODO(F4): 생명이 0 이하가 되면 self.end_game() 을 실행할 것.
+            self.end_game()# 
 
     def end_game(self):
         """게임 오버 처리."""
@@ -159,7 +154,7 @@ class Game:
             self.screen.blit(self.dark_shade, (0, 0))  # 게임 오버 글자가 잘 보이게
         self.screen.blit(self.hud_shade, (0, 0))  # 점수·생명 글자 뒤 어두운 띠
         self.draw_text(f"LIVES: {self.lives}", self.font, WHITE, topright=(WIDTH - 10, 10))
-        # TODO(F3): 화면 왼쪽 위에 현재 점수를 "SCORE: 120" 형태로 표시할 것.
+
         self.draw_text(
             f"SCORE: {self.score}",
             self.font,
@@ -203,6 +198,13 @@ class Game:
             YELLOW,
             center=(WIDTH // 2, HEIGHT // 2 + 60)
         )
+        if pygame.time.get_ticks() // 500 % 2 == 0:
+            self.draw_text(
+                "Press R to restart",
+                self.font,
+                YELLOW,
+                center=(WIDTH // 2, HEIGHT // 2 + 110)
+    )
 
     # ---------------- 게임 루프 ----------------
     def step(self):
